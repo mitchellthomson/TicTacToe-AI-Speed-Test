@@ -84,48 +84,22 @@ def cpuMakesMove(bestMove):
     
 def cpuTurn():
     i = 1
+    score = 0
     while(i<=len(BoardSpot)):
         if(BoardSpot[i] == "-"):
             BoardSpot[i] = "o"
-            score,bestMove = maxAlphaBeta(BoardSpot,-2,2)
+            val = maxAlphaBeta(BoardSpot,-2,2)
+            score = val[0]
+            bestMove = val[1]
             BoardSpot[i] = "-"
             
         i+=1
+    print(score)
     cpuMakesMove(bestMove)
 
 def maxAlphaBeta(BoardSpot, alpha, beta):
     maxv = -2
-    bestMove = None
-    
-    winCheck = cpuCheckWin()
-    if(winCheck == 'x'):
-        return -100, None
-    elif(winCheck == 'o'):
-        return 100, None
-    elif(winCheck == 'tie'):
-        return 0, None
-        
-    i = 1
-    while(i<=len(BoardSpot)):
-        if(BoardSpot[i] == "-"):
-            BoardSpot[i] = "o"
-            score, m = minAlphaBeta(BoardSpot,alpha,beta)
-            BoardSpot[i] = "-"
-            
-            if(score > maxv):
-                maxv = score
-                bestMove = m
-                
-            if(maxv >= beta):
-                return(maxv,bestMove)
-            if(maxv > alpha):
-                alpha = maxv
-        i+=1
-    return maxv, bestMove
-    
-def minAlphaBeta(BoardSpot, alpha, beta):
-    minv = 2
-    bestMove = None
+    bestMove = 0
     
     winCheck = cpuCheckWin()
     if(winCheck == 'x'):
@@ -139,7 +113,43 @@ def minAlphaBeta(BoardSpot, alpha, beta):
     while(i<=len(BoardSpot)):
         if(BoardSpot[i] == "-"):
             BoardSpot[i] = "o"
-            score, m  = maxAlphaBeta(BoardSpot,alpha,beta)
+            val = minAlphaBeta(BoardSpot,alpha,beta)
+            score = val[0]
+            m = val[1]
+            BoardSpot[i] = "-"
+            
+            if(score > maxv):
+                maxv = score
+                bestMove = m
+                
+            if(maxv >= beta):
+                return maxv, bestMove
+            if(maxv > alpha):
+                alpha = maxv
+        i+=1
+    val[0]=maxv
+    val[1]=bestMove
+    return val
+    
+def minAlphaBeta(BoardSpot, alpha, beta):
+    minv = 2
+    bestMove = 0
+    
+    winCheck = cpuCheckWin()
+    if(winCheck == 'x'):
+        return -100
+    elif(winCheck == 'o'):
+        return 100
+    elif(winCheck == 'tie'):
+        return 0
+        
+    i = 1
+    while(i<=len(BoardSpot)):
+        if(BoardSpot[i] == "-"):
+            BoardSpot[i] = "o"
+            val = maxAlphaBeta(BoardSpot,alpha,beta)
+            score = val[0]
+            m = val[1]
             BoardSpot[i] = "-"
             
             if(score < minv):
@@ -147,12 +157,14 @@ def minAlphaBeta(BoardSpot, alpha, beta):
                 bestMove = m
                 
             if(minv <= alpha):
-                return(minv,bestMove)
+                return minv, bestMove
             
             if(minv < beta):
                 beta = minv
         i+=1
-    return minv, bestMove
+    val[0]=minv
+    val[1]=bestMove
+    return val
     
 def cpuCheckWin():
     #horizontal
