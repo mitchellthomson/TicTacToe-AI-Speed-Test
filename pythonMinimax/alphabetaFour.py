@@ -1,10 +1,11 @@
 import time
 
-BoardSpot = {1 : "x",2 : "-",3 : "-",4 : "-",5 : "o",6 : "-",7 : "x",8 : "-",9 : "-",10 : "-",11 : "-",12 : "-",13 : "-",14 : "-",15 : "o",16 : "-"}
+BoardSpot = {1 : "x",2 : "o",3 : "-",4 : "-",5 : "o",6 : "x",7 : "x",8 : "-",9 : "-",10 : "o",11 : "x",12 : "-",13 : "-",14 : "-",15 : "-",16 : "-"}
 Player = 0
-TurnCount = 4
+TurnCount = 6
 startTime = time.time()
 TurnTimes = []
+movecount = 0
 
 def drawBoard(BoardSpot):
     boardDisplay = (f"|{BoardSpot[1]}||{BoardSpot[2]}||{BoardSpot[3]}||{BoardSpot[4]}|\n|{BoardSpot[5]}||{BoardSpot[6]}||{BoardSpot[7]}||{BoardSpot[8]}|\n|{BoardSpot[9]}||{BoardSpot[10]}||{BoardSpot[11]}||{BoardSpot[12]}|\n|{BoardSpot[13]}||{BoardSpot[14]}||{BoardSpot[15]}||{BoardSpot[16]}|\n")
@@ -14,7 +15,6 @@ def gameStart():
     drawBoard(BoardSpot)
     playerPiece = 'x'
     cpuTurn(playerPiece)
-    
 
 def checkWin():
     global Player
@@ -93,7 +93,7 @@ def cpuTurn(playerPiece):
     while(i<=len(BoardSpot)):
         if(BoardSpot[i] == "-"):
             BoardSpot[i] = playerPiece
-            score = miniMax(BoardSpot,0,False, playerPiece)
+            score = miniMax(BoardSpot,0,False,float('-inf'),float('inf'),playerPiece)
             BoardSpot[i] = "-"
             
             if(score > bestScore):
@@ -106,54 +106,58 @@ def cpuTurn(playerPiece):
     TurnTimes.append(turnTime)
     cpuMakesMove(bestMove,playerPiece)
 
-def miniMax(BoardSpot, depth, isMaximizing, playerPiece):
+def miniMax(BoardSpot, depth, isMaximizing,alpha,beta,playerPiece):
+    global movecount
+    # movecount+=1
+    # print(movecount)
     winCheck = cpuCheckWin()
-    depth+=1
-    
     if(playerPiece == 'x'):
         opponentPiece = 'o'
         if(winCheck == 'x'):
-            return 100
+            return 1000
         elif(winCheck == 'o'):
-            return -100
+            return -1000
         elif(winCheck == 'tie'):
             return 0
         
     if(playerPiece == 'o'):
         opponentPiece = 'x'
         if(winCheck == 'x'):
-            return -100
+            return -1000
         elif(winCheck == 'o'):
-            return 100
+            return 1000
         elif(winCheck == 'tie'):
             return 0
-        
+    
     if(isMaximizing):
-        bestScore = -1000
-        
         i = 1
+        bestScore = float('-inf')
         while(i<=len(BoardSpot)):
             if(BoardSpot[i] == "-"):
                 BoardSpot[i] = playerPiece
-                score = miniMax(BoardSpot,depth,False,playerPiece)
+                score = miniMax(BoardSpot,depth-1,False,alpha,beta,playerPiece)
                 BoardSpot[i] = "-"
+                bestScore = max(bestScore, score)
+                alpha = max( alpha, score)
+                if(beta <= alpha):
+                    break
                 
-                if(score > bestScore):
-                    bestScore = score
             i+=1
         return bestScore
     
     else:
-        bestScore = 800
+        bestScore = float('inf')
         i = 1
         while(i<=len(BoardSpot)):
             if(BoardSpot[i] == "-"):
                 BoardSpot[i] = opponentPiece
-                score = miniMax(BoardSpot,depth,True,playerPiece)
+                score = miniMax(BoardSpot,depth-1,True,alpha,beta,playerPiece)
                 BoardSpot[i] = "-"
+                bestScore = min(bestScore, score)
+                beta = min( beta, score)
                 
-                if(score < bestScore):
-                    bestScore = score
+                if beta <= alpha:
+                    break
             i+=1
         return bestScore
     

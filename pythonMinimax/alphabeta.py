@@ -1,21 +1,43 @@
 import time
 import math
+import random
+import sys
 BoardSpot = {1 : "-",2 : "-",3 : "-",4 : "-",5 : "-",6 : "-",7 : "-",8 : "-",9 : "-",}
 Player = 0
 TurnCount = 0
-startTime = time.time()
-TurnTimes = []
+Simulate = 0
+gameStartTime = 0
+startTime = 0
+gameTimes = []
 
 def drawBoard(BoardSpot):
     boardDisplay = (f"|{BoardSpot[1]}||{BoardSpot[2]}||{BoardSpot[3]}|\n|{BoardSpot[4]}||{BoardSpot[5]}||{BoardSpot[6]}|\n|{BoardSpot[7]}||{BoardSpot[8]}||{BoardSpot[9]}|")
     print(boardDisplay+"\n")
     
-def gameStart():
-    drawBoard(BoardSpot)
-    playerPiece = 'x'
-    cpuTurn(playerPiece)
+def reset():
+    global TurnCount
+    global gameStartTime
+    i = 1
+    while i <=(len(BoardSpot)):
+        BoardSpot[i] = '-'
+        i+=1
+    TurnCount = 0
+    gameStartTime = time.time()
+    gameStart()
     
-
+def gameStart():
+    global Player
+    Player = random.choice([0, 1])
+    if(Player == 0):
+        playerPiece = 'x'
+    else:
+        playerPiece = 'o'
+    firstTurn(playerPiece)
+    
+def firstTurn(playerPiece):
+    move = random.randint(1,9)
+    cpuMakesMove(move,playerPiece)
+    
 def checkWin():
     global Player
     drawBoard(BoardSpot)
@@ -62,17 +84,26 @@ def checkWin():
             cpuTurn(playerPiece)
         
 def endGame(win):
-    averageTime = 0
-    endTime = time.time()
-    totalTime = endTime - startTime
+    global Simulate
+    Simulate-=1
     print("Winner is ", win)
-    i = 0
-    while i <len(TurnTimes):
-        averageTime+= TurnTimes[i]
-        i+=1
-    averageTime = averageTime/len(TurnTimes)
-    print("Total game: ", totalTime)
-    print("Average Turn = ",averageTime)
+    endTime = time.time()
+    totalTime = endTime - gameStartTime
+    gameTimes.append(totalTime)
+    if(Simulate > 0):
+        reset()
+    else:
+        endGame = time.time()
+        total = endGame - startTime
+        averageTime = 0
+        
+        i = 0
+        while(i<len(gameTimes)):
+            averageTime+=i
+            i+=1
+        averageTime = averageTime/1000
+        print("Time for simulation = ", total )
+        print("Average time of games = ", averageTime)
     
 def cpuMakesMove(bestMove, playerPiece):
     global TurnCount
@@ -96,9 +127,9 @@ def cpuTurn(playerPiece):
                 bestMove = i
             
         i+=1
-    turnTime = time.time() - turnTimeStart
-    print(turnTime)
-    TurnTimes.append(turnTime)
+    # turnTime = time.time() - turnTimeStart
+    
+    # TurnTimes.append(turnTime)
     cpuMakesMove(bestMove,playerPiece)
 
 def miniMax(BoardSpot, depth, isMaximizing,alpha,beta,playerPiece):
@@ -189,4 +220,23 @@ def cpuCheckWin():
     and BoardSpot[7] != '-'  and BoardSpot[8] != '-'  and BoardSpot[9]!= '-'):
         return('tie')
 
-gameStart()
+def main():
+    global Simulate
+    global startTime
+    sys.setrecursionlimit(3000)
+    while True:
+        runGame = input("Simulate one game or 50? Press 1 or 2 ")
+        if(runGame in ('1', '2')):
+            break
+        else:
+            print("\nInvalid Answer Try Again: ")
+    if(runGame == '1'):
+        Simulate = 1
+        startTime = time.time()
+        gameStart()
+    else:
+        Simulate = 50
+        startTime = time.time()
+        gameStart()
+if __name__ == '__main__':
+    main()
