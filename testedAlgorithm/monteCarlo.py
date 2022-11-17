@@ -124,7 +124,6 @@ def cpuTurn(playerPiece, player):
         score = BoardSize*BoardSize
         
         while(moves != []):
-            print('h')
             attempt = random.randint(1,len(moves))-1
             simBoard = moves[attempt]
             
