@@ -1,6 +1,0 @@
-if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x' and BoardSpot[4] == 'x' and BoardSpot[5] == 'x') 
-    or (BoardSpot[6] == 'x' and BoardSpot[7] == 'x' and BoardSpot[8] == 'x' and BoardSpot[9] == 'x' and BoardSpot[10] == 'x') 
-    or (BoardSpot[11] == 'x' and BoardSpot[12] == 'x' and BoardSpot[13] == 'x' and BoardSpot[14] == 'x' and BoardSpot[15] == 'x')
-    or (BoardSpot[16] == 'x' and BoardSpot[17] == 'x' and BoardSpot[18] == 'x' and BoardSpot[19] == 'x' and BoardSpot[20] == 'x')
-    or (BoardSpot[21] == 'x' and BoardSpot[22] == 'x' and BoardSpot[23] == 'x' and BoardSpot[24] == 'x' and BoardSpot[25] == 'x')):
-        return 'x'
