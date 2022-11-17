@@ -228,19 +228,9 @@ def main():
     global Simulate
     global startTime
     sys.setrecursionlimit(3000)
-    while True:
-        runGame = input("Simulate one game or 50? Press 1 or 2 ")
-        if(runGame in ('1', '2')):
-            break
-        else:
-            print("\nInvalid Answer Try Again: ")
-    if(runGame == '1'):
-        Simulate = 1
-        startTime = time.time()
-        gameStart()
-    else:
-        Simulate = 50
-        startTime = time.time()
-        gameStart()
+    Simulate = 1
+    startTime = time.time()
+    gameStart()
+    
 if __name__ == '__main__':
     main()
