@@ -1,5 +1,6 @@
 import random
 import ast
+import time
 
 BoardSpot = []
 BoardDisp = {}
@@ -7,6 +8,9 @@ Player = 0
 TurnCount = 0
 BoardSize = 3
 Simulations = 200
+startTime = time.time()
+TurnTimes = []
+
 
 def initBoard():
     global BoardSize
@@ -46,7 +50,6 @@ def drawBoard(BoardSpot):
     
 def gameStart():
     global BoardSpot
-    print("Welcome! X plays first!\n")
     BoardSpot = initBoard()
     drawBoard(BoardSpot)
     playerPiece = 'x'
@@ -55,7 +58,7 @@ def gameStart():
 def checkWin(boardX):
     global Player
     board = boardDict(boardX)
-    drawBoard(BoardSpot)
+    #drawBoard(BoardSpot)
     #horizontal
     if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x') 
     or (board[4] == 'x' and board[5] == 'x' and board[6] == 'x') 
@@ -99,7 +102,18 @@ def checkWin(boardX):
             cpuTurn(BoardSpot,playerPiece)
         
 def endGame(win):
+    drawBoard(BoardSpot)
+    averageTime = 0
+    endTime = time.time()
+    totalTime = endTime - startTime
+    i = 0
+    while i <len(TurnTimes):
+        averageTime+= TurnTimes[i]
+        i+=1
+    averageTime = averageTime/len(TurnTimes)
     print("Winner is ", win)
+    print("Average Turn = ",averageTime)
+    print("Total game: ", totalTime)
     
 def cpuMakesMove(bestMove):
     global TurnCount
@@ -127,6 +141,7 @@ def getMoves(board,player):
     return movesLeft
 
 def cpuTurn(BoardSpot, curPlayer):
+    turnTimeStart = time.time()
     global BoardSize
     global Simulations
     evals = {}
@@ -185,7 +200,9 @@ def cpuTurn(BoardSpot, curPlayer):
             bestScore = score
             bestMove = ast.literal_eval(move)
             firstTurn = False  
-            
+    turnTime = time.time() - turnTimeStart
+    # print(turnTime)
+    TurnTimes.append(turnTime)
     cpuMakesMove(bestMove)
     
 def boardDict(boardX):

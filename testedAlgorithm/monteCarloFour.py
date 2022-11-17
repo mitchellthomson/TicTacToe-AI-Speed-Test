@@ -1,5 +1,6 @@
 import random
 import ast
+import time
 
 BoardSpot = []
 BoardDisp = {}
@@ -7,6 +8,8 @@ Player = 0
 TurnCount = 0
 BoardSize = 4
 Simulations = 200
+startTime = time.time()
+TurnTimes = []
 
 def initBoard():
     global BoardSize
@@ -52,41 +55,41 @@ def gameStart():
     playerPiece = 'x'
     cpuTurn(BoardSpot, playerPiece)
     
-def checkWin():
+def checkWin(boardX):
     global Player
-    drawBoard(BoardSpot)
+    board = boardDict(boardX)
     #horizontal
-    if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x' and BoardSpot[4] == 'x') 
-    or (BoardSpot[5] == 'x' and BoardSpot[6] == 'x' and BoardSpot[7] == 'x' and BoardSpot[8] == 'x') 
-    or (BoardSpot[9] == 'x' and BoardSpot[10] == 'x' and BoardSpot[11] == 'x' and BoardSpot[12] == 'x')
-    or (BoardSpot[13] == 'x' and BoardSpot[14] == 'x' and BoardSpot[15] == 'x' and BoardSpot[16] == 'x')):
+    if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x' and board[4] == 'x') 
+    or (board[5] == 'x' and board[6] == 'x' and board[7] == 'x' and board[8] == 'x') 
+    or (board[9] == 'x' and board[10] == 'x' and board[11] == 'x' and board[12] == 'x')
+    or (board[13] == 'x' and board[14] == 'x' and board[15] == 'x' and board[16] == 'x')):
         endGame('x')
-    elif((BoardSpot[1] == 'o' and BoardSpot[2] == 'o' and BoardSpot[3] == 'o' and BoardSpot[4] == 'o') 
-    or (BoardSpot[5] == 'o' and BoardSpot[6] == 'o' and BoardSpot[7] == 'o' and BoardSpot[8] == 'o') 
-    or (BoardSpot[9] == 'o' and BoardSpot[10] == 'o' and BoardSpot[11] == 'o' and BoardSpot[12] == 'o')
-    or (BoardSpot[13] == 'o' and BoardSpot[14] == 'o' and BoardSpot[15] == 'o' and BoardSpot[16] == 'o')):
+    elif((board[1] == 'o' and board[2] == 'o' and board[3] == 'o' and board[4] == 'o') 
+    or (board[5] == 'o' and board[6] == 'o' and board[7] == 'o' and board[8] == 'o') 
+    or (board[9] == 'o' and board[10] == 'o' and board[11] == 'o' and board[12] == 'o')
+    or (board[13] == 'o' and board[14] == 'o' and board[15] == 'o' and board[16] == 'o')):
         endGame('o')
         
         #vertical
-    elif((BoardSpot[1] == 'x' and BoardSpot[5] == 'x' and BoardSpot[9] == 'x' and BoardSpot[13] == 'x') 
-    or (BoardSpot[2] == 'x' and BoardSpot[6] == 'x' and BoardSpot[10] == 'x' and BoardSpot[14] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[7] == 'x' and BoardSpot[11] == 'x' and BoardSpot[15] == 'x')
-    or (BoardSpot[4] == 'x' and BoardSpot[8] == 'x' and BoardSpot[12] == 'x' and BoardSpot[16] == 'x')):
+    elif((board[1] == 'x' and board[5] == 'x' and board[9] == 'x' and board[13] == 'x') 
+    or (board[2] == 'x' and board[6] == 'x' and board[10] == 'x' and board[14] == 'x') 
+    or (board[3] == 'x' and board[7] == 'x' and board[11] == 'x' and board[15] == 'x')
+    or (board[4] == 'x' and board[8] == 'x' and board[12] == 'x' and board[16] == 'x')):
         endGame('x')
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o' and BoardSpot[13] == 'o') 
-    or (BoardSpot[2] == 'o' and BoardSpot[6] == 'o' and BoardSpot[10] == 'o' and BoardSpot[14] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[7] == 'o' and BoardSpot[11] == 'o' and BoardSpot[15] == 'o')
-    or (BoardSpot[4] == 'o' and BoardSpot[8] == 'o' and BoardSpot[12] == 'o' and BoardSpot[16] == 'o')):
+    elif((board[1] == 'o' and board[5] == 'o' and board[9] == 'o' and board[13] == 'o') 
+    or (board[2] == 'o' and board[6] == 'o' and board[10] == 'o' and board[14] == 'o') 
+    or (board[3] == 'o' and board[7] == 'o' and board[11] == 'o' and board[15] == 'o')
+    or (board[4] == 'o' and board[8] == 'o' and board[12] == 'o' and board[16] == 'o')):
         endGame('o')
         
         #diagnol
-    elif((BoardSpot[1] == 'x' and BoardSpot[6] == 'x' and BoardSpot[11] == 'x' and BoardSpot[16] == 'x') 
-    or (BoardSpot[4] == 'x' and BoardSpot[7] == 'x' and BoardSpot[10] == 'x' and BoardSpot[13] == 'x')):
+    elif((board[1] == 'x' and board[6] == 'x' and board[11] == 'x' and board[16] == 'x') 
+    or (board[4] == 'x' and board[7] == 'x' and board[10] == 'x' and board[13] == 'x')):
         endGame('x')
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[6] == 'o' and BoardSpot[11] == 'o' and BoardSpot[16] == 'o') 
-    or (BoardSpot[4] == 'o' and BoardSpot[7] == 'o' and BoardSpot[10] == 'o' and BoardSpot[13] == 'o')):
+    elif((board[1] == 'o' and board[6] == 'o' and board[11] == 'o' and board[16] == 'o') 
+    or (board[4] == 'o' and board[7] == 'o' and board[10] == 'o' and board[13] == 'o')):
         endGame('o')
     
     elif(TurnCount == 16):
@@ -95,20 +98,32 @@ def checkWin():
         if(Player == 0):
             Player = 1
             playerPiece = 'o'
-            cpuTurn(playerPiece)
+            cpuTurn(BoardSpot,playerPiece)
         else:
             Player = 0
             playerPiece = 'x'
-            cpuTurn(playerPiece)
+            cpuTurn(BoardSpot,playerPiece)
         
 def endGame(win):
+    drawBoard(BoardSpot)
+    averageTime = 0
+    endTime = time.time()
+    totalTime = endTime - startTime
+    i = 0
+    while i <len(TurnTimes):
+        averageTime+= TurnTimes[i]
+        i+=1
+    averageTime = averageTime/len(TurnTimes)
     print("Winner is ", win)
+    print("Average Turn = ",averageTime)
+    print("Total game: ", totalTime)
     
 def cpuMakesMove(bestMove):
     global TurnCount
     global BoardSpot
     BoardSpot = bestMove
     TurnCount+=1
+    
     checkWin(BoardSpot)
     
 def simulationBoard(board):
@@ -130,6 +145,7 @@ def getMoves(board,player):
     return movesLeft
 
 def cpuTurn(BoardSpot, curPlayer):
+    turnTimeStart = time.time()
     global BoardSize
     global Simulations
     evals = {}
@@ -188,7 +204,9 @@ def cpuTurn(BoardSpot, curPlayer):
             bestScore = score
             bestMove = ast.literal_eval(move)
             firstTurn = False  
-            
+    turnTime = time.time() - turnTimeStart
+    # print(turnTime)
+    TurnTimes.append(turnTime)
     cpuMakesMove(bestMove)
     
 def boardDict(boardX):
@@ -203,45 +221,46 @@ def boardDict(boardX):
         i+=1
     return board
 
-def cpuCheckWin():
+def cpuCheckWin(boardX):
+    board = boardDict(boardX)
     #horizontal
-    if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x' and BoardSpot[4] == 'x') 
-    or (BoardSpot[5] == 'x' and BoardSpot[6] == 'x' and BoardSpot[7] == 'x' and BoardSpot[8] == 'x') 
-    or (BoardSpot[9] == 'x' and BoardSpot[10] == 'x' and BoardSpot[11] == 'x' and BoardSpot[12] == 'x')
-    or (BoardSpot[13] == 'x' and BoardSpot[14] == 'x' and BoardSpot[15] == 'x' and BoardSpot[16] == 'x')):
+    if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x' and board[4] == 'x') 
+    or (board[5] == 'x' and board[6] == 'x' and board[7] == 'x' and board[8] == 'x') 
+    or (board[9] == 'x' and board[10] == 'x' and board[11] == 'x' and board[12] == 'x')
+    or (board[13] == 'x' and board[14] == 'x' and board[15] == 'x' and board[16] == 'x')):
         return 'x'
-    elif((BoardSpot[1] == 'o' and BoardSpot[2] == 'o' and BoardSpot[3] == 'o' and BoardSpot[4] == 'o') 
-    or (BoardSpot[5] == 'o' and BoardSpot[6] == 'o' and BoardSpot[7] == 'o' and BoardSpot[8] == 'o') 
-    or (BoardSpot[9] == 'o' and BoardSpot[10] == 'o' and BoardSpot[11] == 'o' and BoardSpot[12] == 'o')
-    or (BoardSpot[13] == 'o' and BoardSpot[14] == 'o' and BoardSpot[15] == 'o' and BoardSpot[16] == 'o')):
+    elif((board[1] == 'o' and board[2] == 'o' and board[3] == 'o' and board[4] == 'o') 
+    or (board[5] == 'o' and board[6] == 'o' and board[7] == 'o' and board[8] == 'o') 
+    or (board[9] == 'o' and board[10] == 'o' and board[11] == 'o' and board[12] == 'o')
+    or (board[13] == 'o' and board[14] == 'o' and board[15] == 'o' and board[16] == 'o')):
         return 'o'
         
         #vertical
-    elif((BoardSpot[1] == 'x' and BoardSpot[5] == 'x' and BoardSpot[9] == 'x' and BoardSpot[13] == 'x') 
-    or (BoardSpot[2] == 'x' and BoardSpot[6] == 'x' and BoardSpot[10] == 'x' and BoardSpot[14] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[7] == 'x' and BoardSpot[11] == 'x' and BoardSpot[15] == 'x')
-    or (BoardSpot[4] == 'x' and BoardSpot[8] == 'x' and BoardSpot[12] == 'x' and BoardSpot[16] == 'x')):
+    elif((board[1] == 'x' and board[5] == 'x' and board[9] == 'x' and board[13] == 'x') 
+    or (board[2] == 'x' and board[6] == 'x' and board[10] == 'x' and board[14] == 'x') 
+    or (board[3] == 'x' and board[7] == 'x' and board[11] == 'x' and board[15] == 'x')
+    or (board[4] == 'x' and board[8] == 'x' and board[12] == 'x' and board[16] == 'x')):
         return 'x'
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o' and BoardSpot[13] == 'o') 
-    or (BoardSpot[2] == 'o' and BoardSpot[6] == 'o' and BoardSpot[10] == 'o' and BoardSpot[14] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[7] == 'o' and BoardSpot[11] == 'o' and BoardSpot[15] == 'o')
-    or (BoardSpot[4] == 'o' and BoardSpot[8] == 'o' and BoardSpot[12] == 'o' and BoardSpot[16] == 'o')):
+    elif((board[1] == 'o' and board[5] == 'o' and board[9] == 'o' and board[13] == 'o') 
+    or (board[2] == 'o' and board[6] == 'o' and board[10] == 'o' and board[14] == 'o') 
+    or (board[3] == 'o' and board[7] == 'o' and board[11] == 'o' and board[15] == 'o')
+    or (board[4] == 'o' and board[8] == 'o' and board[12] == 'o' and board[16] == 'o')):
         return 'o'
         
         #diagnol
-    elif((BoardSpot[1] == 'x' and BoardSpot[6] == 'x' and BoardSpot[11] == 'x' and BoardSpot[16] == 'x') 
-    or (BoardSpot[4] == 'x' and BoardSpot[7] == 'x' and BoardSpot[10] == 'x' and BoardSpot[13] == 'x')):
+    elif((board[1] == 'x' and board[6] == 'x' and board[11] == 'x' and board[16] == 'x') 
+    or (board[4] == 'x' and board[7] == 'x' and board[10] == 'x' and board[13] == 'x')):
         return 'x'
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[6] == 'o' and BoardSpot[11] == 'o' and BoardSpot[16] == 'o') 
-    or (BoardSpot[4] == 'o' and BoardSpot[7] == 'o' and BoardSpot[10] == 'o' and BoardSpot[13] == 'o')):
+    elif((board[1] == 'o' and board[6] == 'o' and board[11] == 'o' and board[16] == 'o') 
+    or (board[4] == 'o' and board[7] == 'o' and board[10] == 'o' and board[13] == 'o')):
         return 'o'
     
-    if(BoardSpot[1] != '-' and BoardSpot[2] != '-'  and BoardSpot[3] != '-' and BoardSpot[4] != '-'
-    and BoardSpot[5] != '-'  and BoardSpot[6] != '-'  and BoardSpot[7] != '-' and BoardSpot[8] != '-'
-    and BoardSpot[9] != '-'  and BoardSpot[10] != '-'  and BoardSpot[11]!= '-' and BoardSpot[12] != '-'
-    and BoardSpot[13] != '-'  and BoardSpot[14] != '-'  and BoardSpot[15]!= '-' and BoardSpot[16] != '-'):
+    if(board[1] != '-' and board[2] != '-'  and board[3] != '-' and board[4] != '-'
+    and board[5] != '-'  and board[6] != '-'  and board[7] != '-' and board[8] != '-'
+    and board[9] != '-'  and board[10] != '-'  and board[11]!= '-' and board[12] != '-'
+    and board[13] != '-'  and board[14] != '-'  and board[15]!= '-' and board[16] != '-'):
         return('tie')
 
 gameStart()
