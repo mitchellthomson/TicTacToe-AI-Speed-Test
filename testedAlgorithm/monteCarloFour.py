@@ -10,6 +10,7 @@ BoardSize = 4
 Simulations = 200
 startTime = time.time()
 TurnTimes = []
+moveCount = 0
 
 def initBoard():
     global BoardSize
@@ -105,6 +106,7 @@ def checkWin(boardX):
             cpuTurn(BoardSpot,playerPiece)
         
 def endGame(win):
+    global moveCount
     drawBoard(BoardSpot)
     averageTime = 0
     endTime = time.time()
@@ -117,6 +119,7 @@ def endGame(win):
     print("Winner is ", win)
     print("Average Turn = ",averageTime)
     print("Total game: ", totalTime)
+    print("Total Calcs Made = ", moveCount)
     
 def cpuMakesMove(bestMove):
     global TurnCount
@@ -145,12 +148,15 @@ def getMoves(board,player):
     return movesLeft
 
 def cpuTurn(BoardSpot, curPlayer):
+    global moveCount
     turnTimeStart = time.time()
     global BoardSize
     global Simulations
     evals = {}
     
+    
     for x in range(Simulations):
+        moveCount+=1
         player = curPlayer
         simBoard = simulationBoard(BoardSpot)
         
