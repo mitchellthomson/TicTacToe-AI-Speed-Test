@@ -1,68 +1,89 @@
 import random
 import ast
-BoardSpot = {1 : "-",2 : "-",3 : "-",4 : "-",5 : "-",6 : "-",7 : "-",8 : "-",9 : "-",}
+
+BoardSpot = []
+BoardDisp = {}
 Player = 0
 TurnCount = 0
 BoardSize = 3
-Simulations = 2
+Simulations = 200
 
+def initBoard():
+    global BoardSize
+    global BoardSpot
+    global BoardDisp
+    count = 1
+    while count<=(BoardSize * BoardSize):
+        BoardDisp[count] = "-"
+        count+=1
+
+    temp = []
+    x = "-"
+    y = x * BoardSize
+    z = (list(y))
+    i = 0
+    while i<BoardSize:
+        temp.append(z)
+        i+=1
+    BoardSpot = temp
+    return(BoardSpot)
+    
 def drawBoard(BoardSpot):
-    boardDisplay = (f"|{BoardSpot[1]}||{BoardSpot[2]}||{BoardSpot[3]}|\n|{BoardSpot[4]}||{BoardSpot[5]}||{BoardSpot[6]}|\n|{BoardSpot[7]}||{BoardSpot[8]}||{BoardSpot[9]}|")
+    board = boardDict(BoardSpot)
+    disp = ""
+    i = 1
+    j = 0
+    while i<=len(board):
+        j = 0
+        while j<BoardSize:
+            disp = disp + "|"+str(board[i])+"|"
+            j+=1
+            i+=1
+        disp= disp + "\n"
+    boardDisplay =(disp)
+    # boardDisplay = (f"|{board[1]}||{board[2]}||{board[3]}|\n|{board[4]}||{board[5]}||{board[6]}|\n|{board[7]}||{board[8]}||{board[9]}|")
     print(boardDisplay)
     
 def gameStart():
+    global BoardSpot
     print("Welcome! X plays first!\n")
+    BoardSpot = initBoard()
     drawBoard(BoardSpot)
     playerPiece = 'x'
-    playTurn(playerPiece)
+    cpuTurn(BoardSpot, playerPiece)
     
-def playTurn(playerPiece):
+def checkWin(boardX):
     global Player
-    global TurnCount
-    print("Play your turn: "+ playerPiece)
-    
-    while True:
-        move = input()
-        if(move in ('1', '2', '3', '4', '5', '6', '7', '8', '9') and BoardSpot[int(move)] == '-'):
-            break
-        else:
-            print("\nInvalid Move Try AGAIN: ")
-            
-    BoardSpot[int(move)] = playerPiece
-    TurnCount+=1
-    checkWin()
-
-def checkWin():
-    global Player
+    board = boardDict(boardX)
     drawBoard(BoardSpot)
     #horizontal
-    if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x') 
-    or (BoardSpot[4] == 'x' and BoardSpot[5] == 'x' and BoardSpot[6] == 'x') 
-    or (BoardSpot[7] == 'x' and BoardSpot[8] == 'x' and BoardSpot[9] == 'x')):
+    if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x') 
+    or (board[4] == 'x' and board[5] == 'x' and board[6] == 'x') 
+    or (board[7] == 'x' and board[8] == 'x' and board[9] == 'x')):
         endGame('x')
-    elif((BoardSpot[1] == 'o' and BoardSpot[2] == 'o' and BoardSpot[3] == 'o') 
-    or (BoardSpot[4] == 'o' and BoardSpot[5] == 'o' and BoardSpot[6] == 'o') 
-    or (BoardSpot[7] == 'o' and BoardSpot[8] == 'o' and BoardSpot[9] == 'o')):
+    elif((board[1] == 'o' and board[2] == 'o' and board[3] == 'o') 
+    or (board[4] == 'o' and board[5] == 'o' and board[6] == 'o') 
+    or (board[7] == 'o' and board[8] == 'o' and board[9] == 'o')):
         endGame('o')
         
         #vertical
-    elif((BoardSpot[1] == 'x' and BoardSpot[4] == 'x' and BoardSpot[7] == 'x') 
-    or (BoardSpot[2] == 'x' and BoardSpot[5] == 'x' and BoardSpot[8] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[6] == 'x' and BoardSpot[9] == 'x')):
+    elif((board[1] == 'x' and board[4] == 'x' and board[7] == 'x') 
+    or (board[2] == 'x' and board[5] == 'x' and board[8] == 'x') 
+    or (board[3] == 'x' and board[6] == 'x' and board[9] == 'x')):
         endGame('x')
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[4] == 'o' and BoardSpot[7] == 'o') 
-    or (BoardSpot[2] == 'o' and BoardSpot[5] == 'o' and BoardSpot[8] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[6] == 'o' and BoardSpot[9] == 'o')):
+    elif((board[1] == 'o' and board[4] == 'o' and board[7] == 'o') 
+    or (board[2] == 'o' and board[5] == 'o' and board[8] == 'o') 
+    or (board[3] == 'o' and board[6] == 'o' and board[9] == 'o')):
         endGame('o')
         
         #diagnol
-    elif((BoardSpot[1] == 'x' and BoardSpot[5] == 'x' and BoardSpot[9] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[5] == 'x' and BoardSpot[7] == 'x')):
+    elif((board[1] == 'x' and board[5] == 'x' and board[9] == 'x') 
+    or (board[3] == 'x' and board[5] == 'x' and board[7] == 'x')):
         endGame('x')
         
-    elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[5] == 'o' and BoardSpot[7] == 'o')):
+    elif((board[1] == 'o' and board[5] == 'o' and board[9] == 'o') 
+    or (board[3] == 'o' and board[5] == 'o' and board[7] == 'o')):
         endGame('o')
     
     elif(TurnCount == 9):
@@ -71,53 +92,49 @@ def checkWin():
         Player+=1
         if(Player == 1):
             playerPiece = 'o'
-            cpuTurn(playerPiece,Player)
+            cpuTurn(BoardSpot,playerPiece)
         elif(Player > 1):
             Player = 0
             playerPiece = 'x'
-            playTurn(playerPiece)
+            cpuTurn(BoardSpot,playerPiece)
         
 def endGame(win):
     print("Winner is ", win)
     
 def cpuMakesMove(bestMove):
     global TurnCount
-    BoardSpot[bestMove] = 'o'
+    global BoardSpot
+    BoardSpot = bestMove
     TurnCount+=1
-    checkWin()
+    checkWin(BoardSpot)
     
 def simulationBoard(board):
-    simBoard = {1 : "-",2 : "-",3 : "-",4 : "-",5 : "-",6 : "-",7 : "-",8 : "-",9 : "-",}
-    i = 1
-    while i<=len(board):
-        simBoard[i] = board[i]
-        i+=1
+    simBoard = []
+    for i in board:
+        simBoard.append(i.copy())
     return simBoard
 
 def getMoves(board,player):
-    if(player == 0):
-        playerPiece = 'x'
-    else:
-        playerPiece = 'o'
+    global BoardSize
     movesLeft = []
-    i = 1
     
-    while i <= len(board):
-        if board[i] == '-':
-            simBoard = simulationBoard(board)
-            
-            board[i] = playerPiece
-            movesLeft.append(simBoard)
-        i+=1
+    for i in range(BoardSize):
+        for j in range(BoardSize):
+            if(board[i][j] == "-"):
+                simBoard = simulationBoard(board)
+                simBoard[i][j] = player
+                movesLeft.append(simBoard)
     return movesLeft
 
-def cpuTurn(playerPiece, player):
+def cpuTurn(BoardSpot, curPlayer):
     global BoardSize
     global Simulations
     evals = {}
     
     for x in range(Simulations):
+        player = curPlayer
         simBoard = simulationBoard(BoardSpot)
+        
         simulatedMoves = []
         moves = getMoves(simBoard,player)
 
@@ -131,42 +148,61 @@ def cpuTurn(playerPiece, player):
             
             result = cpuCheckWin(simBoard)
             
-            if(result == playerPiece):
+            if(result == player):
                 break
             
             score-=1
 
-            if(player == 0):
-                player = 1
+            if(player == 'x'):
+                player = 'o'
+                opponent = 'x'
             else:
-                player = 0
+                player = 'x'
+                opponent = 'o'
                 
             moves = getMoves(simBoard,player)
             
         first = simulatedMoves[0]
+        last = simulatedMoves[-1]
         
         firstKey = repr(first)
         
         result = cpuCheckWin(simBoard)
-        if(player == 0 and result == 'x'):
+        if(player == result ):
             score *= -1
             
         if(firstKey in evals):
             evals[firstKey] += score
         else:
             evals[firstKey] = score
-    bestMove = {}
+    bestMove = []
     bestScore = 0
     firstTurn = True
+    
     for move, score in evals.items():
+        
         if firstTurn == True or score > bestScore:
             bestScore = score
             bestMove = ast.literal_eval(move)
-            firstTurn = False
-    print("\n",bestMove)    
-    return 3
+            firstTurn = False  
+            
+    cpuMakesMove(bestMove)
+    
+def boardDict(boardX):
+    board = BoardDisp
+    tempBoard = []
+    for list in boardX:
+        for value in list:
+            tempBoard.append(value)
+    i = 1
+    while i <=len(board):
+        board[i]=tempBoard[i-1]
+        i+=1
+    return board
 
-def cpuCheckWin(board):
+def cpuCheckWin(boardX):
+    
+    board = boardDict(boardX)
     #horizontal
     if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x') 
     or (board[4] == 'x' and board[5] == 'x' and board[6] == 'x') 
