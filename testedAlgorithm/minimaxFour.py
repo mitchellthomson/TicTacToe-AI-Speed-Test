@@ -19,7 +19,7 @@ def gameStart():
 
 def checkWin():
     global Player
-    drawBoard(BoardSpot)
+    # drawBoard(BoardSpot)
     #horizontal
     if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x' and BoardSpot[4] == 'x') 
     or (BoardSpot[5] == 'x' and BoardSpot[6] == 'x' and BoardSpot[7] == 'x' and BoardSpot[8] == 'x') 
@@ -79,7 +79,7 @@ def endGame(win):
     averageTime = averageTime/len(TurnTimes)
     print("Total game: ", totalTime)
     print("Average Turn = ",averageTime)
-    print("Total Calcs Made = ", movecount)
+    # print("Total Calcs Made = ", movecount)
     
 def cpuMakesMove(bestMove, playerPiece):
     global TurnCount
