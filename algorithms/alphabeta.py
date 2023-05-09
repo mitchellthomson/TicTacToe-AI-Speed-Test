@@ -39,51 +39,44 @@ def firstTurn(playerPiece):
     move = random.randint(1,9)
     cpuMakesMove(move,playerPiece)
     
-def checkWin():
+def checkWin(BoardSpot,TurnCount=0):
     global Player
     drawBoard(BoardSpot)
     #horizontal
     if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x') 
     or (BoardSpot[4] == 'x' and BoardSpot[5] == 'x' and BoardSpot[6] == 'x') 
     or (BoardSpot[7] == 'x' and BoardSpot[8] == 'x' and BoardSpot[9] == 'x')):
-        endGame('x')
+        return('x')
     elif((BoardSpot[1] == 'o' and BoardSpot[2] == 'o' and BoardSpot[3] == 'o') 
     or (BoardSpot[4] == 'o' and BoardSpot[5] == 'o' and BoardSpot[6] == 'o') 
     or (BoardSpot[7] == 'o' and BoardSpot[8] == 'o' and BoardSpot[9] == 'o')):
-        endGame('o')
+        return('o')
         
         #vertical
     elif((BoardSpot[1] == 'x' and BoardSpot[4] == 'x' and BoardSpot[7] == 'x') 
     or (BoardSpot[2] == 'x' and BoardSpot[5] == 'x' and BoardSpot[8] == 'x') 
     or (BoardSpot[3] == 'x' and BoardSpot[6] == 'x' and BoardSpot[9] == 'x')):
-        endGame('x')
+        return('x')
         
     elif((BoardSpot[1] == 'o' and BoardSpot[4] == 'o' and BoardSpot[7] == 'o') 
     or (BoardSpot[2] == 'o' and BoardSpot[5] == 'o' and BoardSpot[8] == 'o') 
     or (BoardSpot[3] == 'o' and BoardSpot[6] == 'o' and BoardSpot[9] == 'o')):
-        endGame('o')
+        return('o')
         
         #diagnol
     elif((BoardSpot[1] == 'x' and BoardSpot[5] == 'x' and BoardSpot[9] == 'x') 
     or (BoardSpot[3] == 'x' and BoardSpot[5] == 'x' and BoardSpot[7] == 'x')):
-        endGame('x')
+        return('x')
         
     elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o') 
     or (BoardSpot[3] == 'o' and BoardSpot[5] == 'o' and BoardSpot[7] == 'o')):
-        endGame('o')
+        return('o')
     
     elif(TurnCount == 9):
-        endGame("Tie")
+        return("Tie")
     else:
-        if(Player == 0):
-            Player = 1
-            playerPiece = 'o'
-            cpuTurn(playerPiece)
-        else:
-            Player = 0
-            playerPiece = 'x'
-            cpuTurn(playerPiece)
-        
+        return None
+    
 def endGame(win):
     global count
     global Simulate
@@ -112,7 +105,18 @@ def cpuMakesMove(bestMove, playerPiece):
     global TurnCount
     BoardSpot[bestMove] = playerPiece
     TurnCount+=1
-    checkWin()
+    win_results = checkWin(BoardSpot)
+    if win_results is None:
+        if(Player == 0):
+            Player = 1
+            playerPiece = 'o'
+            cpuTurn(playerPiece)
+        else:
+            Player = 0
+            playerPiece = 'x'
+            cpuTurn(playerPiece,TurnCount)
+    else:
+        endGame(win_results)
     
 def cpuTurn(playerPiece):
     turnTimeStart = time.time()
