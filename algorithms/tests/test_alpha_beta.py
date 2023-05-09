@@ -1,5 +1,5 @@
 import pytest
-from alphaBeta import Board, Game
+from algorithms.alphabeta import Board, Game
 
 def create_board(board_dict={}, board_size=3) -> Board:
     board = Board(board_size)
