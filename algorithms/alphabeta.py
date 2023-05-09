@@ -37,11 +37,11 @@ def gameStart():
     
 def firstTurn(playerPiece):
     move = random.randint(1,9)
-    cpuMakesMove(move,playerPiece)
+    cpuMakesMove(move, BoardSpot,playerPiece)
     
 def checkWin(BoardSpot,TurnCount=0):
-    global Player
     drawBoard(BoardSpot)
+    
     #horizontal
     if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x') 
     or (BoardSpot[4] == 'x' and BoardSpot[5] == 'x' and BoardSpot[6] == 'x') 
@@ -71,8 +71,8 @@ def checkWin(BoardSpot,TurnCount=0):
     elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o') 
     or (BoardSpot[3] == 'o' and BoardSpot[5] == 'o' and BoardSpot[7] == 'o')):
         return('o')
-    
-    elif(TurnCount == 9):
+
+    elif(TurnCount == 9 or  all([v != '-' for v in BoardSpot.values()])):
         return("Tie")
     else:
         return None
@@ -101,34 +101,32 @@ def endGame(win):
         print("Average time of games = ", averageTime)
         print("Total Calcs made = ", count)
     
-def cpuMakesMove(bestMove, playerPiece):
+def cpuMakesMove(bestMove, BoardSpot, playerPiece):
     global TurnCount
     BoardSpot[bestMove] = playerPiece
     TurnCount+=1
-    win_results = checkWin(BoardSpot)
+    win_results = checkWin(BoardSpot, TurnCount)
     if win_results is None:
-        if(Player == 0):
-            Player = 1
+        if(playerPiece == 'x'):
             playerPiece = 'o'
-            cpuTurn(playerPiece)
+            cpuTurn(BoardSpot, playerPiece)
         else:
-            Player = 0
             playerPiece = 'x'
-            cpuTurn(playerPiece,TurnCount)
+            cpuTurn(BoardSpot, playerPiece)
     else:
         endGame(win_results)
     
-def cpuTurn(playerPiece):
+def cpuTurn(BoardSpot, playerPiece):
     turnTimeStart = time.time()
     bestScore = -8000
     bestMove = 0
     i = 1
+    print(len(BoardSpot))
     while(i<=len(BoardSpot)):
         if(BoardSpot[i] == "-"):
             BoardSpot[i] = playerPiece
             score = miniMax(BoardSpot,3,False,float('-inf'),float('inf'),playerPiece)
-            BoardSpot[i] = "-"
-            
+            BoardSpot[i] = "-"   
             if(score > bestScore):
                 bestScore = score
                 bestMove = i
@@ -137,12 +135,12 @@ def cpuTurn(playerPiece):
     # turnTime = time.time() - turnTimeStart
     
     # TurnTimes.append(turnTime)
-    cpuMakesMove(bestMove,playerPiece)
+    cpuMakesMove(bestMove, BoardSpot,playerPiece)
 
 def miniMax(BoardSpot, depth, isMaximizing,alpha,beta,playerPiece):
     global count
     count+=1
-    winCheck = checkWin()
+    winCheck = checkWin(BoardSpot)
     if(playerPiece == 'x'):
         opponentPiece = 'o'
         if(winCheck == 'x'):
