@@ -142,7 +142,7 @@ def cpuTurn(playerPiece):
 def miniMax(BoardSpot, depth, isMaximizing,alpha,beta,playerPiece):
     global count
     count+=1
-    winCheck = cpuCheckWin()
+    winCheck = checkWin()
     if(playerPiece == 'x'):
         opponentPiece = 'o'
         if(winCheck == 'x'):
@@ -192,42 +192,6 @@ def miniMax(BoardSpot, depth, isMaximizing,alpha,beta,playerPiece):
                     break
             i+=1
         return bestScore
-
-def cpuCheckWin():
-    #horizontal
-    if((BoardSpot[1] == 'x' and BoardSpot[2] == 'x' and BoardSpot[3] == 'x') 
-    or (BoardSpot[4] == 'x' and BoardSpot[5] == 'x' and BoardSpot[6] == 'x') 
-    or (BoardSpot[7] == 'x' and BoardSpot[8] == 'x' and BoardSpot[9] == 'x')):
-        return('x')
-    elif((BoardSpot[1] == 'o' and BoardSpot[2] == 'o' and BoardSpot[3] == 'o') 
-    or (BoardSpot[4] == 'o' and BoardSpot[5] == 'o' and BoardSpot[6] == 'o') 
-    or (BoardSpot[7] == 'o' and BoardSpot[8] == 'o' and BoardSpot[9] == 'o')):
-        return('o')
-        
-        #vertical
-    elif((BoardSpot[1] == 'x' and BoardSpot[4] == 'x' and BoardSpot[7] == 'x') 
-    or (BoardSpot[2] == 'x' and BoardSpot[5] == 'x' and BoardSpot[8] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[6] == 'x' and BoardSpot[9] == 'x')):
-        return('x')
-        
-    elif((BoardSpot[1] == 'o' and BoardSpot[4] == 'o' and BoardSpot[7] == 'o') 
-    or (BoardSpot[2] == 'o' and BoardSpot[5] == 'o' and BoardSpot[8] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[6] == 'o' and BoardSpot[9] == 'o')):
-        return('o')
-        
-        #diagnol
-    elif((BoardSpot[1] == 'x' and BoardSpot[5] == 'x' and BoardSpot[9] == 'x') 
-    or (BoardSpot[3] == 'x' and BoardSpot[5] == 'x' and BoardSpot[7] == 'x')):
-        return('x')
-        
-    elif((BoardSpot[1] == 'o' and BoardSpot[5] == 'o' and BoardSpot[9] == 'o') 
-    or (BoardSpot[3] == 'o' and BoardSpot[5] == 'o' and BoardSpot[7] == 'o')):
-        return('o')
-    
-    if(BoardSpot[1] != '-' and BoardSpot[2] != '-'  and BoardSpot[3] != '-'
-    and BoardSpot[4] != '-'  and BoardSpot[5] != '-'  and BoardSpot[6] != '-' 
-    and BoardSpot[7] != '-'  and BoardSpot[8] != '-'  and BoardSpot[9]!= '-'):
-        return('tie')
 
 def main():
     global Simulate
