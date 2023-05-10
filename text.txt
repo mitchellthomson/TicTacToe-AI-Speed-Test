@@ -1,7 +1,0 @@
-Board > Board4x4 > Board5x5 > Board10x10
-Alphabeta > Alphabeta4x4 > Alphabeta5x5
-Minimax > Minimax4x4 > Minimax4x4
-monteCarlo > monteCarlo4x4 > monteCarlo10x10
-
-Game > Board
-Agent > Alphabeta > Minimax > monteCarlo
