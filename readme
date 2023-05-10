@@ -1,7 +1,7 @@
-#h3 running the code
+### running the code
 Only requirements is python, and (pytest if you want to run the testing)
 All the code is in the algorithms directory, each one will need to run independently as they are running different algorithms.
 
-#h2 My study of Planning algorithms, speed and scaling of complexity on tictactoe
+## My study of Planning algorithms, speed and scaling of complexity on tictactoe
 
 The goal of this project was to analyze planning algorithms for research purposes. I wanted to start with using chess algorithms but on a simplier game to reduce my calculation times for the project overall.
