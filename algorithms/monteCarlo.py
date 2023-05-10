@@ -1,263 +1,257 @@
-import random
-import ast
 import time
+import random
+import sys
+from enum import Enum
 
-BoardSpot = []
-BoardDisp = {}
-Player = 0
-TurnCount = 0
-BoardSize = 3
-Simulations = 200
-startTime = time.time()
-TurnTimes = []
-moveCount = 0
+class GameState(Enum):
+    ONGOING = 0
+    WON = 1
+    TIED = 2
 
-def initBoard():
-    global BoardSize
-    global BoardSpot
-    global BoardDisp
-    count = 1
-    while count<=(BoardSize * BoardSize):
-        BoardDisp[count] = "-"
-        count+=1
-
-    temp = []
-    x = "-"
-    y = x * BoardSize
-    z = (list(y))
-    i = 0
-    while i<BoardSize:
-        temp.append(z)
-        i+=1
-    BoardSpot = temp
-    return(BoardSpot)
-    
-def drawBoard(BoardSpot):
-    board = boardDict(BoardSpot)
-    disp = ""
-    i = 1
-    j = 0
-    while i<=len(board):
-        j = 0
-        while j<BoardSize:
-            disp = disp + "|"+str(board[i])+"|"
-            j+=1
-            i+=1
-        disp= disp + "\n"
-    boardDisplay =(disp)
-    # boardDisplay = (f"|{board[1]}||{board[2]}||{board[3]}|\n|{board[4]}||{board[5]}||{board[6]}|\n|{board[7]}||{board[8]}||{board[9]}|")
-    print(boardDisplay)
-    
-def gameStart():
-    global BoardSpot
-    BoardSpot = initBoard()
-    drawBoard(BoardSpot)
-    playerPiece = 'x'
-    cpuTurn(BoardSpot, playerPiece)
-    
-def checkWin(boardX):
-    global Player
-    board = boardDict(boardX)
-    #drawBoard(BoardSpot)
-    #horizontal
-    if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x') 
-    or (board[4] == 'x' and board[5] == 'x' and board[6] == 'x') 
-    or (board[7] == 'x' and board[8] == 'x' and board[9] == 'x')):
-        endGame('x')
-    elif((board[1] == 'o' and board[2] == 'o' and board[3] == 'o') 
-    or (board[4] == 'o' and board[5] == 'o' and board[6] == 'o') 
-    or (board[7] == 'o' and board[8] == 'o' and board[9] == 'o')):
-        endGame('o')
-        
-        #vertical
-    elif((board[1] == 'x' and board[4] == 'x' and board[7] == 'x') 
-    or (board[2] == 'x' and board[5] == 'x' and board[8] == 'x') 
-    or (board[3] == 'x' and board[6] == 'x' and board[9] == 'x')):
-        endGame('x')
-        
-    elif((board[1] == 'o' and board[4] == 'o' and board[7] == 'o') 
-    or (board[2] == 'o' and board[5] == 'o' and board[8] == 'o') 
-    or (board[3] == 'o' and board[6] == 'o' and board[9] == 'o')):
-        endGame('o')
-        
-        #diagnol
-    elif((board[1] == 'x' and board[5] == 'x' and board[9] == 'x') 
-    or (board[3] == 'x' and board[5] == 'x' and board[7] == 'x')):
-        endGame('x')
-        
-    elif((board[1] == 'o' and board[5] == 'o' and board[9] == 'o') 
-    or (board[3] == 'o' and board[5] == 'o' and board[7] == 'o')):
-        endGame('o')
-    
-    elif(TurnCount == 9):
-        endGame("Tie")
-    else:
-        Player+=1
-        if(Player == 1):
-            playerPiece = 'o'
-            cpuTurn(BoardSpot,playerPiece)
-        elif(Player > 1):
-            Player = 0
-            playerPiece = 'x'
-            cpuTurn(BoardSpot,playerPiece)
-        
-def endGame(win):
-    global moveCount
-    drawBoard(BoardSpot)
-    averageTime = 0
-    endTime = time.time()
-    totalTime = endTime - startTime
-    i = 0
-    while i <len(TurnTimes):
-        averageTime+= TurnTimes[i]
-        i+=1
-    averageTime = averageTime/len(TurnTimes)
-    print("Winner is ", win)
-    print("Average Turn = ",averageTime)
-    print("Total game: ", totalTime)
-    print("Total Calcs Made = ", moveCount)
-    
-def cpuMakesMove(bestMove):
-    global TurnCount
-    global BoardSpot
-    BoardSpot = bestMove
-    TurnCount+=1
-    checkWin(BoardSpot)
-    
-def simulationBoard(board):
-    simBoard = []
-    for i in board:
-        simBoard.append(i.copy())
-    return simBoard
-
-def getMoves(board,player):
-    global BoardSize
-    movesLeft = []
-    
-    for i in range(BoardSize):
-        for j in range(BoardSize):
-            if(board[i][j] == "-"):
-                simBoard = simulationBoard(board)
-                simBoard[i][j] = player
-                movesLeft.append(simBoard)
-    return movesLeft
-
-def cpuTurn(BoardSpot, curPlayer):
-    global moveCount
-    turnTimeStart = time.time()
-    global BoardSize
-    global Simulations
-    evals = {}
-    
-    
-    for x in range(Simulations):
-        moveCount+=1
-        player = curPlayer
-        simBoard = simulationBoard(BoardSpot)
-        
-        simulatedMoves = []
-        moves = getMoves(simBoard,player)
-
-        score = BoardSize*BoardSize
-        
-        while(moves != []):
-            attempt = random.randint(1,len(moves))-1
-            simBoard = moves[attempt]
-            
-            simulatedMoves.append(simBoard)
-            
-            result = cpuCheckWin(simBoard)
-            
-            if(result == player):
-                break
-            
-            score-=1
-
-            if(player == 'x'):
-                player = 'o'
-                opponent = 'x'
-            else:
-                player = 'x'
-                opponent = 'o'
-                
-            moves = getMoves(simBoard,player)
-            
-        first = simulatedMoves[0]
-        last = simulatedMoves[-1]
-        
-        firstKey = repr(first)
-        
-        result = cpuCheckWin(simBoard)
-        if(player == result ):
-            score *= -1
-            
-        if(firstKey in evals):
-            evals[firstKey] += score
+class Board:
+    def __init__(self, size, win_length, spots=None):
+        self.size = size
+        self.win_length = win_length
+        self.board_keys = range(1, size * size + 1)
+        if spots is None:
+            self.spots = {i: "-" for i in self.board_keys}
         else:
-            evals[firstKey] = score
-    bestMove = []
-    bestScore = 0
-    firstTurn = True
-    
-    for move, score in evals.items():
-        
-        if firstTurn == True or score > bestScore:
-            bestScore = score
-            bestMove = ast.literal_eval(move)
-            firstTurn = False  
-    turnTime = time.time() - turnTimeStart
-    # print(turnTime)
-    TurnTimes.append(turnTime)
-    cpuMakesMove(bestMove)
-    
-def boardDict(boardX):
-    board = BoardDisp
-    tempBoard = []
-    for list in boardX:
-        for value in list:
-            tempBoard.append(value)
-    i = 1
-    while i <=len(board):
-        board[i]=tempBoard[i-1]
-        i+=1
-    return board
+            self.spots = {k: spots[k] for k in spots}
 
-def cpuCheckWin(boardX):
+    def clone(self):
+        return Board(self.size, self.win_length, self.spots)
     
-    board = boardDict(boardX)
-    #horizontal
-    if((board[1] == 'x' and board[2] == 'x' and board[3] == 'x') 
-    or (board[4] == 'x' and board[5] == 'x' and board[6] == 'x') 
-    or (board[7] == 'x' and board[8] == 'x' and board[9] == 'x')):
-        return('x')
-    elif((board[1] == 'o' and board[2] == 'o' and board[3] == 'o') 
-    or (board[4] == 'o' and board[5] == 'o' and board[6] == 'o') 
-    or (board[7] == 'o' and board[8] == 'o' and board[9] == 'o')):
-        return('o')
-        
-        #vertical
-    elif((board[1] == 'x' and board[4] == 'x' and board[7] == 'x') 
-    or (board[2] == 'x' and board[5] == 'x' and board[8] == 'x') 
-    or (board[3] == 'x' and board[6] == 'x' and board[9] == 'x')):
-        return('x')
-        
-    elif((board[1] == 'o' and board[4] == 'o' and board[7] == 'o') 
-    or (board[2] == 'o' and board[5] == 'o' and board[8] == 'o') 
-    or (board[3] == 'o' and board[6] == 'o' and board[9] == 'o')):
-        return('o')
-        
-        #diagnol
-    elif((board[1] == 'x' and board[5] == 'x' and board[9] == 'x') 
-    or (board[3] == 'x' and board[5] == 'x' and board[7] == 'x')):
-        return('x')
-        
-    elif((board[1] == 'o' and board[5] == 'o' and board[9] == 'o') 
-    or (board[3] == 'o' and board[5] == 'o' and board[7] == 'o')):
-        return('o')
-    
-    if(board[1] != '-' and board[2] != '-'  and board[3] != '-'
-    and board[4] != '-'  and board[5] != '-'  and board[6] != '-' 
-    and board[7] != '-'  and board[8] != '-'  and board[9]!= '-'):
-        return('tie')
+    def generate_winning_conditions(self):
+        size = self.size
+        win_len = self.win_length
+        winning_conditions = []
 
-gameStart()
+        # Rows
+        for row in range(size):
+            for col in range(size - win_len + 1):
+                condition = [row * size + col + i + 1 for i in range(win_len)]
+                winning_conditions.append(condition)
+
+        # Columns
+        for col in range(size):
+            for row in range(size - win_len + 1):
+                condition = [(row + i) * size + col + 1 for i in range(win_len)]
+                winning_conditions.append(condition)
+
+        # Main diagonals
+        for row in range(size - win_len + 1):
+            for col in range(size - win_len + 1):
+                condition = [(row + i) * size + col + i + 1 for i in range(win_len)]
+                winning_conditions.append(condition)
+
+        # Counter-diagonals
+        for row in range(size - win_len + 1):
+            for col in range(win_len - 1, size):
+                condition = [(row + i) * size + col - i + 1 for i in range(win_len)]
+                winning_conditions.append(condition)
+
+        return winning_conditions
+
+    def check_win(self):
+        board_spots = self.spots
+
+        winning_conditions = self.generate_winning_conditions()
+
+        for condition in winning_conditions:
+            first_spot = board_spots[condition[0]]
+            if first_spot != '-' and all(board_spots[i] == first_spot for i in condition):
+                return first_spot
+        
+        # Todo: this isn't a very efficient solution, improve
+        empty_spots = 0
+        for i in range(self.size):
+            for j in range(self.size):
+                empty_spots += 1 if(board_spots[i * self.size + j + 1] == '-') else 0
+                
+        if empty_spots ==0:
+            return 'tie'
+
+    def reset(self):
+        self.spots = {i: "-" for i in range(1, self.size * self.size + 1)}
+
+    def draw(self):
+        rows = [f"|{'||'.join(self.spots[i] for i in range(row * self.size + 1, (row + 1) * self.size + 1))}|" for row in range(self.size)]
+        board_display = "\n".join(rows)
+        print(board_display + "\n")
+
+    def make_move(self, move, player_piece):
+        self.spots[move] = player_piece
+    
+    def clear_move(self, move):
+        self.spots[move] = "-"
+
+    def get_board_spots(self):
+        return self.spots
+
+    def get_board_keys(self):
+        return range(1, self.size * self.size + 1)
+
+    def is_spot_empty(self, index):
+        return self.spots[index] == "-"
+
+    def get_available_moves(self, player_piece):
+        return [i for i in self.board_keys if self.is_spot_empty(i)]
+
+
+class Agent:
+    def __init__(self, playing_piece, enemy_piece):
+        self.playing_piece = playing_piece
+        self.enemy_piece = enemy_piece
+    
+    def run(self, board: Board):
+        raise NotImplementedError('Abstract method')
+
+class ScoringAgent(Agent):
+
+    def score(self, board:Board, index:int):
+        raise NotImplemented('Abstract method')
+
+    def run(self, board: Board):
+        best_score = float('-inf')
+        best_move = None
+
+        for i in board.board_keys:
+            if board.is_spot_empty(i):
+                score = self.score(board, i)
+                if score > best_score:
+                    best_score = score
+                    best_move = i
+        return best_move
+
+class MonteCarloAgent(Agent):
+    def __init__(self, player_piece: str, enemy_piece: str, simulations: int = 200):
+        super().__init__(player_piece, enemy_piece)
+        self.simulations = simulations
+        self.evals = {}
+
+    def run(self, board: Board):
+        start = time.time()
+        evals = self.simulate(board, self.playing_piece)
+        end = time.time()
+        print(f"Time elapsed: {end - start}")
+
+        best_move = None
+        best_score = float('-inf')
+
+        for move, score in evals.items():
+            if score > best_score:
+                best_move = move
+                best_score = score
+
+        return best_move
+
+    def simulate(self, board: Board, player_piece: str) -> float:
+        evals = {}
+        for _ in range(self.simulations):
+            player = player_piece
+            sim_board = board.clone()
+            simulated_moves = []
+            moves = sim_board.get_available_moves(player)
+
+            score = sim_board.size * sim_board.size
+
+            while moves:
+                attempt = random.choice(moves)
+                sim_board.make_move(attempt, player)
+                simulated_moves.append(attempt)
+
+                result = sim_board.check_win()
+
+                if result == player:
+                    break
+
+                score -= 1
+                player = 'o' if player == 'x' else 'x'
+                moves = sim_board.get_available_moves(player)
+
+            first_move = simulated_moves[0]
+
+            if player == result:
+                score *= -1
+
+            first_move_key = first_move # repr(first_move.spots)
+
+            if first_move_key in evals:
+                evals[first_move_key] += score
+            else:
+                evals[first_move_key] = score
+
+        return evals
+
+
+class TwoPlayerGame:
+    def __init__(self, board, players: list[Agent]):
+        self.board = board
+        self.turn_count = 0
+        self.simulate = 0
+        self.game_start_time = 0
+        self.start_time = 0
+        self.game_times = []
+
+        self.players = players
+
+    def end_game(self, win):
+        self.simulate -= 1
+        if win == 'tie':
+            print("Game was a tie")
+        else: 
+            print("Winner is ", win)
+        end_time = time.time()
+        total_time = end_time - self.game_start_time
+        self.game_times.append(total_time)
+        if self.simulate > 0:
+            self.reset()
+        else:
+            end_game_time = time.time()
+            total_time = end_game_time - self.start_time
+            average_time = sum(self.game_times) / len(self.game_times)
+            print("Time for simulation = ", total_time)
+            exit(1)
+
+    def reset(self):
+        self.board.reset()
+        self.turn_count = 0
+        self.game_start_time = time.time()
+        self.run()
+
+    def run(self):
+        player_index = random.choice([0, 1])
+        self.first_turn(self.players[player_index])
+        while True:
+            self.board.draw()
+            player_index = 1 - player_index
+            player_action = self.players[player_index].run(self.board)
+            self.board.make_move(player_action, self.players[player_index].playing_piece) # Todo: validate player move
+
+            self.turn_count += 1
+
+            game_won = self.board.check_win()
+            if game_won:
+                self.board.draw()
+                self.end_game(game_won)
+
+    def first_turn(self, player:Agent):
+        move = random.choice(self.board.board_keys)
+        self.board.make_move(move, player.playing_piece)
+    
+
+def main():
+    board_size = 5
+    win_length = 5
+    board = Board(board_size, win_length)
+    player_one = MonteCarloAgent('x', 'o')
+    player_two = MonteCarloAgent('o', 'x')
+    game = TwoPlayerGame(board, [player_one, player_two])
+
+    sys.setrecursionlimit(3000)
+    game.simulate = 1
+    game.start_time = time.time()
+    game.run()
+
+if __name__ == '__main__':
+    main()
