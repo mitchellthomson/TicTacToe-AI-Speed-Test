@@ -1,7 +1,7 @@
-My study of Planning algorithms, speed and scaling of complexity on tictactoe
-includes python code for tested algorithms and c# game of tictactoe you can play yourself against an AI
+#h3 running the code
+Only requirements is python, and (pytest if you want to run the testing)
+All the code is in the algorithms directory, each one will need to run independently as they are running different algorithms.
 
-My notebook containing all the results of the study are found in Results as a jupyter notebook
+#h2 My study of Planning algorithms, speed and scaling of complexity on tictactoe
 
-All programs used are found in the jupyter notebook and testing"testedAlgorithm"
-Any code found in pythonMinimax is my own personal tests from their start to finish feel free to try them aswell but many are the same
+The goal of this project was to analyze planning algorithms for research purposes. I wanted to start with using chess algorithms but on a simplier game to reduce my calculation times for the project overall.
